@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- 
+            MENÚ PRINCIPAL
+            Este será el menú de nivel superior en la barra de aplicaciones.
+        -->
+        <menuitem
+            id="menu_report_root"
+            name="Informes Personalizados"
+            sequence="99"
+            web_icon="mi_modulo_informes,static/description/icon.png"
+        />
+
+        <!--
+            SUBMENÚ MODIFICADO
+            Ahora apunta a la acción de ventana que abre nuestro asistente.
+        -->
+        <menuitem
+            id="menu_report_external_data"
+            name="Informe de Datos Externos"
+            parent="menu_report_root"
+            action="mi_modulo_informes.action_window_report_data_wizard"
+            sequence="10"
+        />
+
+    </data>
+</odoo>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Vista de Formulario para el Asistente -->
+        <record id="view_report_data_wizard_form" model="ir.ui.view">
+            <field name="name">report.data.wizard.form</field>
+            <field name="model">report.data.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Generar Informe">
+                    <p>
+                        Haga clic en el botón 'Imprimir' para generar el informe de datos externos.
+                    </p>
+                    <footer>
+                        <button name="action_print_report" string="Imprimir" type="object" class="btn-primary"/>
+                        <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Acción de Ventana para abrir el Asistente -->
+        <record id="action_window_report_data_wizard" model="ir.actions.act_window">
+            <field name="name">Generar Informe de Datos Externos</field>
+            <field name="res_model">report.data.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="view_id" ref="view_report_data_wizard_form"/>
+        </record>
+    </data>
+</odoo>

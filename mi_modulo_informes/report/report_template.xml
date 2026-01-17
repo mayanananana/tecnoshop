@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- 
+        PLANTILLA QWEB
+        Esta es la estructura visual del informe PDF/HTML.
+    -->
+    <template id="report_external_data_template">
+        <!-- Llama al manejador de QWeb para procesar el contenido -->
+        <t t-call="web.html_container">
+            <!-- NO iterar aquí para tener un informe de una sola página -->
+            <!-- Usa la plantilla de diseño estándar de Odoo (cabecera y pie de página) -->
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Informe de Datos Externos</h2>
+                    <p>
+                        Este es un ejemplo de informe QWeb basado en un modelo sin tabla
+                        en la base de datos.
+                    </p>
+
+                    <h3>Tabla Resumen</h3>
+                    <table class="table table-sm table-bordered mt-4">
+                        <thead>
+                            <tr>
+                                <th class="text-left">ID</th>
+                                <th class="text-left">Nombre</th>
+                                <th class="text-right">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Iteramos sobre 'docs' para llenar la tabla -->
+                            <tr t-foreach="docs" t-as="line">
+                                <td><span t-esc="line.id"/></td>
+                                <td><span t-esc="line.nombre"/></td>
+                                <td class="text-right">
+                                    <span t-esc="line.total" t-options="{'widget': 'float', 'precision': 2}"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <p class="mt-4">
+                        <strong>Total de Registros:</strong>
+                        <span t-esc="len(docs)"/>
+                    </p>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

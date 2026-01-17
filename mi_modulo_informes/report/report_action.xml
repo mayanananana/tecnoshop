@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!--
+            ACCIÓN DE INFORME (ir.actions.report)
+            Define cómo se debe generar el informe.
+        -->
+        <record id="action_report_external_data" model="ir.actions.report">
+            <field name="name">Informe de Datos Externos</field>
+            <field name="model">external.data</field>
+            <field name="report_type">qweb-pdf</field>
+            
+            <!-- El nombre del informe debe ser: nombre_modulo.nombre_plantilla -->
+            <field name="report_name">mi_modulo_informes.report_external_data_template</field>
+            <field name="report_file">mi_modulo_informes.report_external_data_template</field>
+            
+            <!-- binding_model_id permite que la acción aparezca en el menú "Imprimir"
+                 de la vista de lista/formulario del modelo. Como nuestro modelo no tiene
+                 vista, esto no es estrictamente necesario, pero es una buena práctica. -->
+            <field name="binding_model_id" ref="model_external_data"/>
+            <field name="binding_type">report</field>
+        </record>
+
+    </data>
+</odoo>
