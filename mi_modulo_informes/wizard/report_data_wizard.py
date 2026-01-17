@@ -18,4 +18,4 @@ class ReportDataWizard(models.TransientModel):
         """
         # Se asegura de que la llamada al informe se hace en un contexto limpio
         # y bien definido, iniciado por el usuario.
-        return self.env.ref('mi_modulo_informes.action_report_external_data').report_action()
+        return self.env.ref('mi_modulo_informes.action_report_external_data').report_action(docids=[])
