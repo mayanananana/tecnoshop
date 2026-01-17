@@ -1,36 +1,43 @@
 # -*- coding: utf-8 -*-
 
-from odoo import models, fields, api
+from odoo import models, fields, api, tools
 
-class ExternalData(models.AbstractModel):
+class ExternalData(models.Model):
+    """
+    Este modelo ahora es un modelo de solo lectura (`_auto = False`) que mapea
+    sus campos a una vista de base de datos (`_table`).
+    """
     _name = 'external.data'
-    _description = 'Modelo Virtual para Datos de Informe'
-    _auto = False
+    _description = 'Modelo Virtual para Datos de Informe (Vista SQL)'
+    _auto = False  # Impide que Odoo cree una tabla para este modelo.
+    _table = 'external_data_sql_view' # Mapeamos el modelo a nuestra vista SQL.
 
-    # El campo 'id' o 'record_id' se elimina. El ORM gestionará el ID.
+    # Los campos ahora se corresponden directamente con las columnas de la vista SQL.
+    # El campo 'id' es ahora un campo normal porque existe en la vista.
+    # No lo definimos aquí porque Odoo lo gestiona implícitamente para `models.Model`.
     nombre = fields.Char('Nombre del Registro', readonly=True)
     total = fields.Float('Valor Total', readonly=True)
 
     @api.model
-    def _get_report_data(self, docids, data=None):
+    def init(self):
         """
-        Esta función es llamada por la acción de informe para recolectar
-        los datos que se enviarán a la plantilla QWeb.
+        El método init() se ejecuta al instalar o actualizar el módulo.
+        Usamos `tools.drop_view_if_exists` para asegurar la idempotencia y
+        luego creamos nuestra vista SQL.
         """
-        # Ya no necesitamos definir 'record_id' aquí.
-        report_data_dicts = [
-            {'nombre': 'Registro de Ejemplo 1', 'total': 150.75},
-            {'nombre': 'Registro de Ejemplo 2', 'total': 89.99},
-            {'nombre': 'Registro de Ejemplo 3', 'total': 345.00},
-            {'nombre': 'Registro de Ejemplo 4', 'total': 120.50},
-        ]
-
-        docs = self.env[self._name].new(report_data_dicts)
-
-        return {
-            # Usamos los IDs reales (temporales) de los registros creados.
-            'doc_ids': docs.ids,
-            'doc_model': self._name,
-            'docs': docs,
-            'company': self.env.company,
-        }
+        tools.drop_view_if_exists(self.env.cr, self._table)
+        self.env.cr.execute("""
+            CREATE OR REPLACE VIEW %s AS (
+                SELECT
+                    row_number() OVER () AS id,
+                    v.nombre,
+                    v.total
+                FROM (
+                    VALUES
+                        ('Registro de Ejemplo 1', 150.75),
+                        ('Registro de Ejemplo 2', 89.99),
+                        ('Registro de Ejemplo 3', 345.00),
+                        ('Registro de Ejemplo 4', 120.50)
+                ) AS v(nombre, total)
+            )
+        """ % (self._table,))
